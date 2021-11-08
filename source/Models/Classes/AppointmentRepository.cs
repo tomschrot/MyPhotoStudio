@@ -34,11 +34,13 @@ namespace MyPhotoStudio.Models
         }
         //---------------------------------------------------------------------
 
+        public AppointmentRepository Add (Action <Appointment> handle)
+        =>
+            Add ( new Appointment ().apply (handle) );
+
         public AppointmentRepository Add (Appointment apoi)
-        {
-            _appointments.Add (apoi);
-            return this;
-        }
+        =>
+            this.apply ( _ =>  _appointments.Add (apoi) );
 
         //---------------------------------------------------------------------
         public AppointmentRepository GetAppointmentsFor
@@ -61,7 +63,7 @@ namespace MyPhotoStudio.Models
             (
                 (Appointment a, Appointment b) => a.Date.CompareTo (b.Date)
             );
-            
+
             return this;
         }
         //---------------------------------------------------------------------

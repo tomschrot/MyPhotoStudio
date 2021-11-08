@@ -9,32 +9,18 @@ Console.WriteLine ("Console Application Template for VS Code\nby Tom Schröter")
 var list =
 
         new AppointmentRepository ()
-            .Add
-            (
-                new Appointment
-                {
-                    Customer = new Customer
-                    {
-                        Name             = "Donald Duck",
-                        CreditCardNumber = "12345-6789-000"
-                    },
-
-                    Date = DateTime.Parse ("13.11.2021")
-                }
-            )
-            .Add
-            (
-                new Appointment
-                {
-                    Customer = new Customer
-                    {
-                        Name             = "Mickey Mouse",
-                        CreditCardNumber = "12345-6789-111"
-                    },
-
-                    Date = DateTime.Parse ("10.10.2021")
-                }
-            )
+            .Add ( appointment =>
+            {
+                appointment.Customer.Name             = "Donald Duck";
+                appointment.Customer.CreditCardNumber = "12345-6789-000";
+                appointment.Date                      = DateTime.Parse ("13.11.2021");
+            })
+            .Add ( appointment =>
+            {
+                appointment.Customer.Name             = "Mickey Mouse";
+                appointment.Customer.CreditCardNumber = "12345-6789-000";
+                appointment.Date                      = DateTime.Parse ("10.10.2021");
+            })
             .Sort ()
             ;
 
