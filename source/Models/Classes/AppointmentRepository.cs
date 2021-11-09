@@ -28,22 +28,22 @@ namespace MyPhotoStudio.Models
             this.apply ( _ =>  _appointments.Add (apoi) );
 
         //---------------------------------------------------------------------
-        public AppointmentRepository @foreach (Action <Appointment> handle)
+        public AppointmentRepository ForEach (Action <Appointment> treat)
         =>
             this.apply ( _ =>
             {
                 for (int n = 0; n < _appointments.Count; n++)
-                    handle?.Invoke (_appointments[n]);
+                    treat?.Invoke (_appointments[n]);
             });
         //---------------------------------------------------------------------
         public AppointmentRepository SearchFor
         (
-            Func   <Appointment, bool> match,
+            Func   <Appointment, bool> check,
             Action <Appointment>       treat
         )
-        =>  @foreach ( item =>
+        =>  ForEach ( item =>
             {
-                if ( match(item) )
+                if ( check(item) )
                     treat (item);
             });
         //---------------------------------------------------------------------

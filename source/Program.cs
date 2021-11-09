@@ -36,11 +36,11 @@ var list =
                 appointment.Customer.CreditCardNumber = "12345-6789-000";
                 appointment.Date                      = DateTime.Parse ("11.11.2021");
             })
-            .SortBy   ( (a, b) => a.Date.CompareTo (b.Date) )
-            .@foreach ( item => Console.WriteLine (item) )
+            .SortBy    ( (a, b) => a.Date.CompareTo (b.Date) )
+            .ForEach   ( item => Console.WriteLine (item) )
             .SearchFor
             (
-                match: item => item.Date == requiredDate,
+                check: item => item.Date == requiredDate,
                 treat: item => Console.WriteLine ($"Found: {item}")
             )
             ;
