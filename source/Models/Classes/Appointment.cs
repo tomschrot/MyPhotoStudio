@@ -1,5 +1,4 @@
 ﻿
-using System.Collections.Generic;
 using System;
 
 namespace MyPhotoStudio.Models
@@ -8,5 +7,8 @@ namespace MyPhotoStudio.Models
     {
         public DateTime Date     { get; set; } = DateTime.Now;
         public Customer Customer { get; set; } = new ();
+
+        override
+        public string ToString () => $"{Date}: {Customer.Name}";
     }
 }

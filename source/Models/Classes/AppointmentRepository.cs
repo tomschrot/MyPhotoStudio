@@ -2,70 +2,54 @@
 using System;
 using System.Collections.Generic;
 
+using static MyPhotoStudio.Extensions;
+
 namespace MyPhotoStudio.Models
 {
     public sealed class AppointmentRepository
     {
         //---------------------------------------------------------------------
-
-        public static AppointmentRepository operator +
-        (
-            AppointmentRepository repo,
-            Appointment           apoi
-        )
-        {
-            repo._appointments.Add (apoi);
-
-            // should make sense to sort after insert??
-            repo._appointments.Sort();
-
-            return repo;
-        }
-        //---------------------------------------------------------------------
-
         private readonly List<Appointment> _appointments = new ();
 
         //---------------------------------------------------------------------
-
         public Appointment this [int n]
         {
             get => _appointments [n];
             set => _appointments [n] = value;
         }
         //---------------------------------------------------------------------
-
-        public AppointmentRepository Add (Action <Appointment> handle)
+        public AppointmentRepository Add (Action <Appointment> treat)
         =>
-            Add ( new Appointment ().apply (handle) );
+            Add ( configureNew <Appointment> (treat) );
 
+        //---------------------------------------------------------------------
         public AppointmentRepository Add (Appointment apoi)
         =>
             this.apply ( _ =>  _appointments.Add (apoi) );
 
         //---------------------------------------------------------------------
-        public AppointmentRepository GetAppointmentsFor
-        (
-            DateTime             targetDate,
-            Action <Appointment> handle
-        )
-        {
-            for (int n = 0; n < _appointments.Count; n++)
-                if ( targetDate == _appointments[n].Date )
-                    handle (_appointments[n]);
-
-            return this;
-        }
+        public AppointmentRepository @foreach (Action <Appointment> handle)
+        =>
+            this.apply ( _ =>
+            {
+                for (int n = 0; n < _appointments.Count; n++)
+                    handle?.Invoke (_appointments[n]);
+            });
         //---------------------------------------------------------------------
-
-        public AppointmentRepository Sort ()
-        {
-            _appointments.Sort
-            (
-                (Appointment a, Appointment b) => a.Date.CompareTo (b.Date)
-            );
-
-            return this;
-        }
+        public AppointmentRepository SearchFor
+        (
+            Func   <Appointment, bool> match,
+            Action <Appointment>       treat
+        )
+        =>  @foreach ( item =>
+            {
+                if ( match(item) )
+                    treat (item);
+            });
+        //---------------------------------------------------------------------
+        public AppointmentRepository SortBy (Comparison <Appointment> criteria)
+        =>
+            this.apply ( _ => _appointments.Sort (criteria) );
         //---------------------------------------------------------------------
     }
 }
